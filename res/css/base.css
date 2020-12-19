@@ -1,0 +1,474 @@
+@font-face {
+    font-family: 'orbitronregular';
+    src: url('../fonts/orbitron-variablefont_wght-webfont.woff2') format('woff2'),
+         url('../fonts/orbitron-variablefont_wght-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'montserratbold';
+    src: url('../fonts/montserrat-bold-webfont.woff2') format('woff2'),
+         url('../fonts/montserrat-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'montserratitalic';
+    src: url('../fonts/montserrat-italic-webfont.woff2') format('woff2'),
+         url('../fonts/montserrat-italic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'montserratregular';
+    src: url('../fonts/montserrat-regular-webfont.woff2') format('woff2'),
+         url('../fonts/montserrat-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+:root {
+    --primary-c1: rgba(178, 57, 255, 1);
+    --primary-c2: rgba(104, 0, 231, 1);
+    --primary-c3: rgba(5, 185, 236, 1);
+    --primary-c4: rgba(16, 14, 35, 1);
+    
+    /*shaded versions*/
+    --primary-c1-s1: rgba(103, 2, 149, 1);
+    --primary-c2-s1: rgba(65, 0, 139, 1);
+    --primary-c3-s1: rgba(0, 118, 169, 1);
+
+    --primary-c1-s2: rgba(68, 9, 105, 1);
+    --primary-c2-s2: rgba(42, 0, 94, 1);
+    --primary-c3-s2: rgba(2, 93, 132, 1);
+
+    --primary-c1-s3: rgba(36, 0, 56, 1);
+    --primary-c2-s3: rgba(20, 0, 47, 1);
+    --primary-c3-s3: rgba(0, 42, 58, 1);
+
+    --secondary-c1: rgba(253, 41, 79, 1);
+    --secondary-c2: rgba(22, 10, 254, 1);
+    --secondary-c3: rgba(255, 235, 216, 1);
+    --secondary-c4: rgba(1, 2, 42, 1);
+
+
+}
+
+
+html {
+    /* csslint ignore:start */
+    /* The nav header is 3.5rem high, plus 20px for the margin-top of the
+       main container. */
+    scroll-padding-top: calc(3.5rem + 20px);
+    background-color: var(--primary-c4);
+    font-size: 100%;
+    /* csslint ignore:end */
+}
+
+body {
+    font-size: 100%;
+    line-height: 1.7rem;
+    font-family: "montserratregular";
+    background-color: var(--primary-c4);
+    color: var(--secondary-c3);
+}
+
+/* Replacement for `body { background-attachment: fixed; }`, which has
+   performance issues when scrolling on large displays. See #1394. */
+/*body::before {
+    content: ' ';
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #f8f8f8;
+    background: url(../img/grid.png) repeat-x;
+    will-change: transform;
+    z-index: -1;
+}
+*/
+body > .container {
+    margin-top: 20px;
+    min-height: 400px;
+}
+
+a {
+    color: var(--secondary-c3);
+}
+
+[role="main"] a {
+    color: var(--primary-c3 );
+    /*text-decoration: underline;*/
+}
+
+a:hover, a:focus {
+    color: var(--primary-c3);
+    text-decoration: underline;
+}
+
+
+.navbar.fixed-top { /* csslint allow: adjoining-classes */
+    /* csslint ignore:start */
+    position: -webkit-sticky;
+    position: sticky;
+    /* csslint ignore:end */
+}
+
+.source-links {
+    float: right;
+}
+
+video {
+  width: 100%    !important;
+  height: auto   !important;
+}
+
+.col-md-9 img {
+    max-width: 100%;
+    display: inline-block;
+    padding: 4px;
+    line-height: 1.428571429;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 20px auto 30px auto;
+}
+
+h1 {
+    color: #444;
+    font-weight: 400;
+    font-size: 42px;
+    font-family: "orbitronregular";
+    text-transform: uppercase;
+    color: var(--primary-c3);
+}
+
+h2, h3, h4, h5, h6 {
+    color: #444;
+    font-weight: 300;
+    font-family: "orbitronregular";
+    text-transform: uppercase;
+    color: var(--primary-c3);
+}
+
+hr {
+    border-top: 1px solid #aaa;
+}
+
+pre, .rst-content tt {
+    max-width: 100%;
+    background: #fff;
+    border: solid 1px #e1e4e5;
+    color: #333;
+    overflow-x: auto;
+}
+
+code.code-large, .rst-content tt.code-large {
+    font-size: 90%;
+}
+
+code {
+    padding: 2px 5px;
+    background: #fff;
+    border: solid 1px #e1e4e5;
+    color: #333;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+pre code {
+    display: block;
+    background: transparent;
+    border: none;
+    white-space: pre;
+    word-wrap: normal;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
+}
+
+kbd {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #fff;
+    background-color: #333;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.25);
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.25);
+}
+
+a code {
+    color: #2FA4E7;
+}
+
+a:hover code, a:focus code {
+    color: #157AB5;
+}
+
+footer {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: 200;
+}
+
+footer > hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--primary-c1), rgba(0, 0, 0, 0));
+}
+
+footer a {
+    color: var(--primary-c3-s1);
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: var(--primary-c1);
+    text-decoration: none;
+}
+
+.modal-dialog {
+    margin-top: 60px;
+}
+
+
+.navbar .navbar-nav .nav-link,
+.navbar .navbar-nav .show >.nav-link
+, .navbar .navbar-nav .active >.nav-link
+, .navbar .navbar-nav .nav-link.show
+, .navbar .navbar-nav .nav-link.active {
+    color: var(--primary-c1);
+}
+
+.navbar .navbar-nav .nav-link:hover
+, .navbar .navbar-nav .nav-link:focus {
+    color: var(--primary-c3-s1);
+}
+
+.bg-secondary {
+    /*background-color: var(--primary-c2-s2) !important;*/
+    background-color: transparent !important;
+}
+
+.card {
+    border: 1px solid var(--primary-c3);
+}
+
+.navbar-brand img {
+    max-width: 3rem;
+    height: auto;
+}
+
+#toc-collapse .nav-link:hover {
+    color: var(--primary-c3);
+}
+
+.navbar {
+    font-family: "orbitronregular";
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--primary-c1);
+}
+
+.bg-primary {
+    background-color: var(--primary-c4) !important;  /*its !important in bootstrap min... sorry for that*/
+    background-image: none;
+}
+
+/*
+ * Side navigation
+ *
+ * Scrollspy and affixed enhanced navigation to highlight sections and secondary
+ * sections of docs content.
+ */
+
+.bs-sidebar.affix { /* csslint allow: adjoining-classes */
+    /* csslint ignore:start */
+    position: -webkit-sticky;
+    position: sticky;
+    /* csslint ignore:end */
+    /* The nav header is 3.5rem high, plus 20px for the margin-top of the
+       main container. */
+    top: calc(3.5rem + 20px);
+}
+
+.bs-sidebar.card { /* csslint allow: adjoining-classes */
+    padding: 0;
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+/* Toggle (vertically flip) sidebar collapse icon */
+.bs-sidebar .navbar-toggler span {
+    -moz-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+    transform: scale(1, -1);
+}
+
+.bs-sidebar .navbar-toggler.collapsed span { /* csslint allow: adjoining-classes */
+    -moz-transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+}
+
+/* First level of nav */
+.bs-sidebar > .navbar-collapse > .nav {
+    padding-top:    10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* All levels of nav */
+.bs-sidebar .nav > li > a {
+    display: block;
+    padding: 5px 10px 5px 20px;
+    z-index: 1;
+    overflow-wrap: anywhere;
+    line-height: 1.3em;
+}
+.bs-sidebar .nav > li > a:hover,
+.bs-sidebar .nav > li > a:focus {
+    text-decoration: none;
+    border-right: 2px solid var(--primary-c3);
+}
+.bs-sidebar .nav > li > a.active,
+.bs-sidebar .nav > li > a.active:hover,
+.bs-sidebar .nav > li > a.active:focus {
+    font-weight: bold;
+    background-color: transparent;
+    border-right: 2px solid var(--primary-c3);
+}
+
+.bs-sidebar .nav .nav .nav {
+    margin-left: 1em;
+}
+
+.bs-sidebar .nav > li > a {
+    font-weight: bold;
+}
+
+.bs-sidebar .nav .nav > li > a {
+    font-weight: normal;
+}
+
+.headerlink {
+    font-family: FontAwesome;
+    font-size: 14px;
+    display: none;
+    padding-left: .5em;
+}
+
+h1:hover .headerlink, h2:hover .headerlink, h3:hover .headerlink, h4:hover .headerlink, h5:hover .headerlink, h6:hover .headerlink{
+    display:inline-block;
+}
+
+
+
+.admonition {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.admonition.note { /* csslint allow: adjoining-classes */
+    color: #3a87ad;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.admonition.warning { /* csslint allow: adjoining-classes */
+    color: #c09853;
+    background-color: #fcf8e3;
+    border-color: #fbeed5;
+}
+
+.admonition.danger { /* csslint allow: adjoining-classes */
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
+}
+
+.admonition-title {
+    font-weight: bold;
+    text-align: left;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-collapse.show { /* csslint allow: adjoining-classes */
+        overflow-y: auto;
+        max-height: calc(100vh - 3.5rem);
+    }
+}
+
+.dropdown-item.open { /* csslint allow: adjoining-classes */
+    color: #fff;
+    background-color: #2FA4E7;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    margin: 0 0 0 1.5rem;
+    padding: 0;
+    border-width: 0;
+}
+
+.dropdown-submenu > a::after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover > a::after {
+    border-left-color: #fff;
+}
+
+
+
+@media (min-width: 992px) {
+    .dropdown-menu {
+        overflow-y: auto;
+        max-height: calc(100vh - 3.5rem);
+    }
+
+    .dropdown-submenu {
+        position: relative;
+    }
+
+    .dropdown-submenu > .dropdown-menu {
+        /* csslint ignore:start */
+        position: fixed !important;
+        /* csslint ignore:end */
+        margin-top: -9px;
+        margin-left: -2px;
+        border-width: 1px;
+        padding: 0.5rem 0;
+    }
+
+    .dropdown-submenu.pull-left { /* csslint allow: adjoining-classes */
+        float: none;
+    }
+
+    .dropdown-submenu.pull-left > .dropdown-menu { /* csslint allow: adjoining-classes */
+        left: -100%;
+        margin-left: 10px;
+    }
+}
+
