@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+      @font-face {
+        font-family: 'Montserrat';
+        src: url('font/MontserratAlternates-Regular.otf');
+      }
+      h1 {font-family: Montserrat};
+    </style>
+</head>
+<body onload="setFocus();">
+  <!-- Please don't judge this thing too hard - It's a 'Learning-By-Doing'-Project... -->
+  <h1> PlayGround</h1>
+
+  <div style="display: none"; id="scan">
+    <canvas id="canvas" width="800" height="1320"></canvas>
+  </div>
+  
+  <script>
+    console.log("Script Here...");
+
+    function setFocus() {
+      idfield = document.getElementById("idtext");
+      idfield.focus();
+    }
+
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    let imageData, numPixels, pixels, buffer;
+
+    let image = new Image();
+    let idtext = "John Jilly Doe"
+
+    image.addEventListener ( "load", function (){
+      ctx.drawImage (image, 0, 0);
+      //imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      imageData = ctx.getImageData(20, 1270, 500, 40)
+      buffer = ctx.createImageData(imageData); // Buffer, um die Pixel wieder auf das Original zu setzen
+      numPixels = imageData.width * imageData.height;
+      pixels = imageData.data;
+      // Default/Dummy Text
+      ctx.font = "30px Montserrat";
+      ctx.fillStyle = "#000000";
+      ctx.strokeStyle = "#CF9C9E";
+      ctx.textAlign = 'center';
+      ctx.fillText(idtext, 275,1300);
+      // Development helper to determine the area to reset
+      /*
+      ctx.beginPath();
+      ctx.fillStyle = 'black';
+      ctx.strokeStyle = 'black';
+      ctx.rect(20,1270,500,40);
+      ctx.stroke();
+      */
+    });
+
+    image.src = "skelett.png";
+
+    function nameChanged() {
+      console.log("Current name: ");
+      ctx.beginPath();
+      ctx.fillStyle = 'black';
+      ctx.strokeStyle = 'black';
+      <!-- ctx.rect(20,1270,500,40); -->
+      ctx.stroke();
+      ctx.putImageData(imageData, 20,1270);
+      idtext=document.getElementById("idtext").value;
+      ctx.fillText(idtext, 275,1300);
+      document.getElementById("scan").style="display: block";
+    }
+
+    </script>
+
+    <form>
+      <label>Enter your name:</label>
+      <input id="idtext" type="text" onkeyup="nameChanged();"/>
+    </form>
+  </body>
+</html>
