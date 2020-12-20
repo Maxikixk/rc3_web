@@ -1,38 +1,55 @@
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <style>
-      @font-face {
-        font-family: 'Montserrat';
-        src: url('font/MontserratAlternates-Regular.otf');
-      }
-      h1 {font-family: Montserrat};
-    </style>
+  <!-- From baseplate -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <link rel="shortcut icon" href="/res/img/favicon.ico">
+  <title>CerT</title>
+
+  <link href="/res/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/res/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/res/css/base.css" rel="stylesheet">
+
+  <script src="/res/js/jquery-1.10.2.min.js"></script>
+  <script src="/res/js/bootstrap.min.js"></script>
+
+  <!-- Ant -->
+  
+  <style>
+    @font-face {
+      font-family: 'Minecraftia';
+      src: url('font/Minecraftia-Regular.ttf');
+    }
+    
+    h1 {font-family: Minecraftia};
+  </style>
+
+  <script>
+    $(document).ready(function(){
+      idfield = document.getElementById("idname");
+      idfield.focus();
+    })
+  </script>
+
 </head>
-<body onload="setFocus();">
+<body>
   <!-- Please don't judge this thing too hard - It's a 'Learning-By-Doing'-Project... -->
-  <h1> PlayGround</h1>
+  <h1> CerT PlayGround</h1>
 
   <div style="display: none"; id="scan">
-    <canvas id="canvas" width="800" height="1320"></canvas>
+    <canvas id="canvas" width="128" height="128"></canvas>
   </div>
   
   <script>
     console.log("Script Here...");
-
-    function setFocus() {
-      idfield = document.getElementById("idtext");
-      idfield.focus();
-    }
 
     let canvas = document.getElementById('canvas');
     let ctx = canvas.getContext('2d');
     let imageData, numPixels, pixels, buffer;
 
     let image = new Image();
-    let idtext = "John Jilly Doe"
+    let idname = "ASixteenByteName"
 
     image.addEventListener ( "load", function (){
       ctx.drawImage (image, 0, 0);
@@ -42,11 +59,13 @@
       numPixels = imageData.width * imageData.height;
       pixels = imageData.data;
       // Default/Dummy Text
-      ctx.font = "30px Montserrat";
-      ctx.fillStyle = "#000000";
+      /*
+      ctx.font = "Minecraftia";
+      ctx.fillStyle = "#FFFFFF";
       ctx.strokeStyle = "#CF9C9E";
       ctx.textAlign = 'center';
-      ctx.fillText(idtext, 275,1300);
+      ctx.fillText(idname, 50,110);
+      */
       // Development helper to determine the area to reset
       /*
       ctx.beginPath();
@@ -57,26 +76,66 @@
       */
     });
 
-    image.src = "skelett.png";
+    image.src = "x-ray-base.png";
 
-    function nameChanged() {
+    function doScan(e) {
+      e.preventDefault();
+
       console.log("Current name: ");
       ctx.beginPath();
-      ctx.fillStyle = 'black';
-      ctx.strokeStyle = 'black';
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'white';
       <!-- ctx.rect(20,1270,500,40); -->
       ctx.stroke();
-      ctx.putImageData(imageData, 20,1270);
-      idtext=document.getElementById("idtext").value;
-      ctx.fillText(idtext, 275,1300);
+      <!-- ctx.putImageData(imageData, 20, 20); -->
+      idname=document.getElementById("idname").value;
+      ctx.textAlign = 'right';
+      ctx.fillText(idname, 128, 10);
+
+      iddate=document.getElementById("iddate").value;
+      ctx.textAlign = 'right';
+      ctx.fillText(iddate, 128, 25);
+
+      datetime = new Date();
+      currdate = datetime.getDate()+ "." + (datetime.getMonth()+ 1)+"." + datetime.getFullYear();
+      ctx.textAlign = 'left';
+      ctx.fillText(currdate, 0, 114);
+      currtime="";
+      // incl. Zeit?
+      hour = datetime.getHours();
+      min = datetime.getMinutes();
+      sec = datetime.getSeconds();
+      if (min < 10) {min = "0"+min};
+      if (sec < 10) {sec = "0"+min};
+      currtime=hour+":"+min+":"+sec;
+      ctx.fillText(currtime, 0, 128);
+
       document.getElementById("scan").style="display: block";
+      document.getElementById("form").style="display: none";
+
+      return false;
     }
 
     </script>
 
-    <form>
-      <label>Enter your name:</label>
-      <input id="idtext" type="text" onkeyup="nameChanged();"/>
-    </form>
+    <div style="display: inline-block;" id="form">
+      <form onsubmit="doScan(event)">
+        <div>
+          <label>Your name:</label>
+          <input id="idname" name="idname" type="text"/>
+        </div>
+        <div>
+          <label title="aka Birthday">Release date:</label>
+          <input title="aka Birthday" id="iddate" name="iddate" placeholder="e.g. MM/DD/YYYY" type="text"/>
+        </div>
+        <div>
+          <input type="submit" value="Start scan"/>
+        </div>
+      </form>
+    </div>
+
+    <footer class="col-md-12">
+      <p><a href="https://cert.ccc.de/wiki/index.php?title=Kontakt">Impressum</a></p>
+    </footer>
   </body>
 </html>
