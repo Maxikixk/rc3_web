@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Virtual MRI</title>
     <script src="/res/js/vmri.js"></script>
+    <link href="/res/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/res/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/res/css/base.css" />
     <link rel="stylesheet" href="/res/css/vmri.css" />
 </head>
 
@@ -17,9 +20,10 @@
                 <span class="sr-only">Loading...</span>
             </div>
             <div class="flex-fill"></div>
-            <p class="h-100 mr-3 nav-item"><a class="fg3" href="https://cert.ccc.de/wiki/index.php?title=Kontakt">Impressum</a></p>
-            <p class="h-100 mr-3 nav-item"><a class="fg0" href="https://github.com/0x1cedd1ce/VMRI">Source Code</a></p>
-            <h1 class="dark-orange">Virtual MRI</h1>
+            <p class="h-100 mr-3 nav-item"><a class="cp1s1"
+                    href="https://cert.ccc.de/wiki/index.php?title=Kontakt">Impressum</a></p>
+            <p class="h-100 mr-3 nav-item"><a class="cp1" href="https://github.com/0x1cedd1ce/VMRI">Source Code</a></p>
+            <h1 class="cp1">Virtual MRI</h1>
         </div>
         <div class="content px-4 pt-2 hidden" id="content">
             <div class="row" onwheel="scrollDataset(event)">
@@ -106,40 +110,43 @@
                         <div class="figcaption">K-Space</div>
                         <canvas class="border img-fluid w-100" onwheel="scrollResult(event)" id="kResult"></canvas>
                     </figure>
-                    <label for="slice">K-Space brighten:</label>
-                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="1" max="100"
-                        name="kspacemult" id="kspacemult" value="20" onchange="displayAndWindow3DImage();" />
+                    <fieldset id="kspace">
+                        <label for="slice">K-Space brighten:</label>
+                        <input type="range" class="pl-0 pr-0 form-control form-control-range" min="1" max="100"
+                            name="kspacemult" id="kspacemult" value="20" onchange="displayAndWindow3DImage();" />
 
-                    <label for="slice">K-Space y-lines:</label>
-                    <input type="number" id="k_yline_number" class="form-control" min="1" max="256" value="256"
-                        onchange="reco(true, true);" />
-                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="1" max="256"
-                        name="k_yline" id="k_yline" value="256" onchange="reco(false, true);" />
-                    <label for="slice">K-Space x-lines:</label>
-                    <input type="number" id="k_xline_number" class="form-control" min="1" max="256" value="256"
-                        onchange="reco(true, true);" />
-                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="1" max="256"
-                        name="k_xline" id="k_xline" value="256" onchange="reco(false, true);" />
+                        <label for="slice">K-Space y-lines:</label>
+                        <input type="number" id="k_yline_number" class="form-control" min="1" max="256" value="256"
+                            onchange="reco(true, true);" />
+                        <input type="range" class="pl-0 pr-0 form-control form-control-range" min="1" max="256"
+                            name="k_yline" id="k_yline" value="256" onchange="reco(false, true);" />
+                        <label for="slice">K-Space x-lines:</label>
+                        <input type="number" id="k_xline_number" class="form-control" min="1" max="256" value="256"
+                            onchange="reco(true, true);" />
+                        <input type="range" class="pl-0 pr-0 form-control form-control-range" min="1" max="256"
+                            name="k_xline" id="k_xline" value="256" onchange="reco(false, true);" />
 
-                    <label for="slice">K-Space f min:</label>
-                    <input type="number" id="k_fmin_number" class="form-control" min="0" max="256" value="0"
-                        onchange="reco(true, true);" />
-                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="0" max="128"
-                        name="k_fmin" id="k_fmin" value="0" onchange="reco(false, true);" />
-                    <label for="slice">K-Space f max:</label>
-                    <input type="number" id="k_fmax_number" class="form-control" min="0" max="256" value="256"
-                        onchange="reco(true, true);" />
-                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="0" max="256"
-                        name="k_fmax" id="k_fmax" value="256" onchange="reco(false, true);" />
+                        <label for="slice">K-Space f min:</label>
+                        <input type="number" id="k_fmin_number" class="form-control" min="0" max="256" value="0"
+                            onchange="reco(true, true);" />
+                        <input type="range" class="pl-0 pr-0 form-control form-control-range" min="0" max="128"
+                            name="k_fmin" id="k_fmin" value="0" onchange="reco(false, true);" />
+                        <label for="slice">K-Space f max:</label>
+                        <input type="number" id="k_fmax_number" class="form-control" min="0" max="256" value="256"
+                            onchange="reco(true, true);" />
+                        <input type="range" class="pl-0 pr-0 form-control form-control-range" min="0" max="256"
+                            name="k_fmax" id="k_fmax" value="256" onchange="reco(false, true);" />
 
-                    <input class="btn btn-secondary w-100" type="button" name="reco" id="reco" onclick="reco()"
-                        value="Reconstruct image" />
+                        <input class="btn btn-secondary w-100" type="button" name="reco" id="reco" onclick="reco()"
+                            value="Reconstruct image" />
+                    </fieldset>
                 </div>
                 <div class="col mx-3 mb-2">
                     <div class="row w-100 container-fluid justify-content-center">
-                    <canvas class="border img-result w-100" style="max-height: calc(100vh - 8.5rem); max-width: calc(100vh - 8.5rem);" onwheel="scrollResult(event)"
-                        onmousedown="startWindowing()" onmouseup="endWindowing()" onmouseout="endWindowing()"
-                        onmousemove="windowResult(event)" id="imgResult"></canvas>
+                        <canvas class="border img-result w-100"
+                            style="max-height: calc(100vh - 8.5rem); max-width: calc(100vh - 8.5rem);"
+                            onwheel="scrollResult(event)" onmousedown="startWindowing()" onmouseup="endWindowing()"
+                            onmouseout="endWindowing()" onmousemove="windowResult(event)" id="imgResult"></canvas>
                     </div>
                     <div class="row">
                         <div class="col">
@@ -158,7 +165,8 @@
                                 name="slice" id="r_slice" value="100" onchange="displayAndWindow3DImage();" />
                         </div>
                         <div class="col d-flex">
-                            <input type="button" class="btn-secondary form-control align-self-center" value="Auto Window" onclick="autoWindow()" />
+                            <input type="button" class="btn-secondary align-self-center" value="Auto Window"
+                                onclick="autoWindow()" />
                         </div>
                     </div>
                 </div>
