@@ -1,0 +1,173 @@
+﻿<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Virtual MRI</title>
+    <base href="./" />
+    <script src="./vmri.js"></script>
+    <link rel="stylesheet" href="custom.css" />
+</head>
+
+<body class="text-monospace">
+    <div class="main">
+        <div class="top-row px-4">
+            <input type="button" class="btn-primary oi-data-transfer-download" onclick="loadFuzzyDataSet()"
+                value="Load Dataset" id="loadDataset" />
+            <div class="ml-2 spinner-border hidden" role="status" id="datasetLoading">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="flex-fill"></div>
+            <p class="h-100 mr-3 nav-item"><a class="fg3" href="https://cert.ccc.de/wiki/index.php?title=Kontakt">Impressum</a></p>
+            <p class="h-100 mr-3 nav-item"><a class="fg0" href="https://github.com/0x1cedd1ce/VMRI">Source Code</a></p>
+            <h1 class="dark-orange">Virtual MRI</h1>
+        </div>
+        <div class="content px-4 pt-2 hidden" id="content">
+            <div class="row" onwheel="scrollDataset(event)">
+                <figure class="col pr-0 figure text-center">
+                    <figcaption class="figure-caption">Proton density</figcaption>
+                    <canvas class="figure-img img-fluid rounded" id="imgPD"></canvas>
+                </figure>
+                <figure class="col pl-0 pr-0 figure text-center">
+                    <figcaption class="figure-caption">T1 time</figcaption>
+                    <canvas class="figure-img img-fluid rounded" id="imgT1"></canvas>
+                </figure>
+                <figure class="col pl-0 figure text-center">
+                    <figcaption class="figure-caption">T2 time</figcaption>
+                    <canvas class="figure-img img-fluid rounded" id="imgT2"></canvas>
+                </figure>
+            </div>
+            <div class="row mx-1">
+                <div class="col-auto">
+                    <label class="mb-0 py-1 align-self-center" for="slice">Slice:</label>
+                </div>
+                <div class="col">
+                    <input type="range" class="pl-0 pr-0 align-self-center form-control form-control-range" min="0"
+                        max="zdim" name="slice" id="slice" value="100" onchange="displayDataSet();" />
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col" id="sequence">
+                    <div class="row">
+                        <div class="col nav nav-tabs">
+                            <div class="nav-link active" id="params-ir-tab" onclick="setInversionRecovery()">Inversion
+                                Recovery</div>
+                            <div class="nav-link" id="params-se-tab" onclick="setSpinEcho()">Spin Echo</div>
+                        </div>
+                    </div>
+                    <div class="row border py-2 tab-content" id="params">
+                        <div class="col tab-pane active" id="params-ir">
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TI:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="400" name="ti" id="ir_ti" />
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TR:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="6000" name="tr" id="ir_tr" />
+                            </div>
+                        </div>
+                        <div class="col tab-pane" id="params-se">
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TE:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="400" name="ti" id="se_te" />
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TR:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="6000" name="tr" id="se_tr" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mx-2 my-2">
+                        <input type="button" class="col btn-primary" onclick="startScan()" value="Start Scan"
+                            id="sequence_start" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pb-2 pt-3 hidden" id="scanningSpinner">
+                <div class="flex-fill"></div>
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="flex-fill"></div>
+            </div>
+
+            <div class="row pt-3 hidden align-items-end" id="result">
+                <div class="col-3">
+                    <figure>
+                        <div class="figcaption">K-Space</div>
+                        <canvas class="border img-fluid w-100" onwheel="scrollResult(event)" id="kResult"></canvas>
+                    </figure>
+                    <label for="slice">K-Space brighten:</label>
+                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="1" max="100"
+                        name="kspacemult" id="kspacemult" value="20" onchange="displayAndWindow3DImage();" />
+
+                    <label for="slice">K-Space y-lines:</label>
+                    <input type="number" id="k_yline_number" class="form-control" min="1" max="256" value="256"
+                        onchange="reco(true, true);" />
+                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="1" max="256"
+                        name="k_yline" id="k_yline" value="256" onchange="reco(false, true);" />
+                    <label for="slice">K-Space x-lines:</label>
+                    <input type="number" id="k_xline_number" class="form-control" min="1" max="256" value="256"
+                        onchange="reco(true, true);" />
+                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="1" max="256"
+                        name="k_xline" id="k_xline" value="256" onchange="reco(false, true);" />
+
+                    <label for="slice">K-Space f min:</label>
+                    <input type="number" id="k_fmin_number" class="form-control" min="0" max="256" value="0"
+                        onchange="reco(true, true);" />
+                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="0" max="128"
+                        name="k_fmin" id="k_fmin" value="0" onchange="reco(false, true);" />
+                    <label for="slice">K-Space f max:</label>
+                    <input type="number" id="k_fmax_number" class="form-control" min="0" max="256" value="256"
+                        onchange="reco(true, true);" />
+                    <input type="range" class="pl-0 pr-0 form-control form-control-range" min="0" max="256"
+                        name="k_fmax" id="k_fmax" value="256" onchange="reco(false, true);" />
+
+                    <input class="btn btn-secondary w-100" type="button" name="reco" id="reco" onclick="reco()"
+                        value="Reconstruct image" />
+                </div>
+                <div class="col mx-3 mb-2">
+                    <div class="row w-100 container-fluid justify-content-center">
+                    <canvas class="border img-result w-100" style="max-height: calc(100vh - 8.5rem); max-width: calc(100vh - 8.5rem);" onwheel="scrollResult(event)"
+                        onmousedown="startWindowing()" onmouseup="endWindowing()" onmouseout="endWindowing()"
+                        onmousemove="windowResult(event)" id="imgResult"></canvas>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="ti">Window Center: </label>
+                            <input type="range" class="pl-0 pr-0 form-control form-control-range" name="wc" id="wc"
+                                min="0" max="4096" value="2048" onchange="displayAndWindow3DImage();" />
+                        </div>
+                        <div class="col">
+                            <label for="tr">Window Width:</label>
+                            <input type="range" class="pl-0 pr-0 form-control form-control-range" name="ww" id="ww"
+                                min="0" max="4096" value="4096" onchange="displayAndWindow3DImage();" />
+                        </div>
+                        <div class="col">
+                            <label for="slice">Slice:</label>
+                            <input type="range" class="pl-0 pr-0 form-control form-control-range" min="0" max="zdim"
+                                name="slice" id="r_slice" value="100" onchange="displayAndWindow3DImage();" />
+                        </div>
+                        <div class="col d-flex">
+                            <input type="button" class="btn-secondary form-control align-self-center" value="Auto Window" onclick="autoWindow()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
