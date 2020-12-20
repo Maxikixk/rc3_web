@@ -47,7 +47,7 @@ function QueryableWorker(url) {
         }
     }
 }
-const w = new QueryableWorker("intensityCalculations.js");
+const w = new QueryableWorker("/res/js/intensityCalculations.js");
 
 const xdim = 256;
 const ydim = 256;
@@ -80,6 +80,7 @@ const resultMessageHandler = function (data) {
     spin = document.getElementById("scanningSpinner");
     r.classList.remove("hidden");
     spin.classList.add("hidden");
+    document.getElementById("kspace").removeAttribute("disabled");
     displayAndWindow3DImage();
 };
 w.addListener('result', resultMessageHandler);
@@ -384,6 +385,7 @@ function inversionRecovery() {
 }
 
 function reco(update_slider, noIfft = false) {
+    document.getElementById("kspace").setAttribute("disabled","disabled");
     var xlines, ylines, fmin, fmax;
     if (update_slider) {
         xlines = document.getElementById("k_xline_number").valueAsNumber;
