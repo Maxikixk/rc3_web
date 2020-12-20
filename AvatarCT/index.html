@@ -106,7 +106,7 @@
       min = datetime.getMinutes();
       sec = datetime.getSeconds();
       if (min < 10) {min = "0"+min};
-      if (sec < 10) {sec = "0"+min};
+      if (sec < 10) {sec = "0"+sec};
       currtime=hour+":"+min+":"+sec;
       ctx.fillText(currtime, 0, 128);
 
