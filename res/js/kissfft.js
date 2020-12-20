@@ -1,4 +1,4 @@
-self.importScripts("./a.out.js")
+self.importScripts("/res/js/a.out.js")
 
 /** Compute the FFT of a real-valued mxn matrix. */
 function rfft2d(data, m, n) {

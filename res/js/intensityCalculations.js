@@ -1,5 +1,5 @@
-﻿self.importScripts("./kissfft.js")
-self.importScripts("./pako.min.js")
+﻿self.importScripts("/res/js/kissfft.js")
+self.importScripts("/res/js/pako.min.js")
 
 const xdim = 256;
 const ydim = 256;
@@ -24,7 +24,7 @@ async function loadDataSet() {
             resolve(b);
         }
         xhr.onerror = reject
-        xhr.open("GET", "./pd.bin.gz", true)
+        xhr.open("GET", "/VMRI/pd.bin.gz", true)
         xhr.responseType = "arraybuffer";
         xhr.send()
     });
@@ -41,7 +41,7 @@ async function loadDataSet() {
             resolve(b);
         }
         xhr.onerror = reject
-        xhr.open("GET", "./t1.bin.gz", true)
+        xhr.open("GET", "/VMRI/t1.bin.gz", true)
         xhr.responseType = "arraybuffer";
         xhr.send()
     });
@@ -58,7 +58,7 @@ async function loadDataSet() {
             resolve(b);
         }
         xhr.onerror = reject
-        xhr.open("GET", "./t2.bin.gz", true)
+        xhr.open("GET", "/VMRI/t2.bin.gz", true)
         xhr.responseType = "arraybuffer";
         xhr.send()
     });

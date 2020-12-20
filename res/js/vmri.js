@@ -47,7 +47,7 @@ function QueryableWorker(url) {
         }
     }
 }
-const w = new QueryableWorker("intensityCalculations.js");
+const w = new QueryableWorker("/res/js/intensityCalculations.js");
 
 const xdim = 256;
 const ydim = 256;
