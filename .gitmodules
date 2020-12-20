@@ -1,4 +1,0 @@
-[submodule "VMRI"]
-	path = VMRI
-	url = https://github.com/0x1cedd1ce/VMRI.git
-	branch = main
