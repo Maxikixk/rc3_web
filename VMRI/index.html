@@ -16,8 +16,16 @@
 <body class="text-monospace">
     <div class="main">
         <div class="top-row px-4">
-            <input type="button" class="btn-primary oi-data-transfer-download" onclick="loadFuzzyDataSet()"
-                value="Load Dataset" id="loadDataset" />
+            <button class="btn-primary" onclick="loadFuzzyDataSet()"
+                value="Load Dataset" id="loadDataset">Load Dataset 1</button>
+            <select id="datasetPath">
+                <option value="/VMRI/3T/05">05 - 3T</option>
+                <option value="/VMRI/1T/05">05 - 1T</option>
+                <option value="/VMRI/3T/54">54 - 3T</option>
+                <option value="/VMRI/1T/54">54 - 1T</option>
+                <option value="/VMRI/3T/bw">bw - 3T</option>
+                <option value="/VMRI/1T/bw">bw - 1T</option>
+            </select>
             <div class="ml-2 spinner-border hidden" role="status" id="datasetLoading">
                 <span class="sr-only">Loading...</span>
             </div>

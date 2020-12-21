@@ -10,7 +10,7 @@ var array_t1 = new Uint16Array(256 * 256);
 var array_t2 = new Uint16Array(256 * 256);
 var k_data_im_re, k_result;
 
-async function loadDataSet() {
+async function loadDataSet(path) {
     array_pd = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -18,13 +18,14 @@ async function loadDataSet() {
             var mm = new Float32Array(resp, 0, 2);
             var a = new Uint8Array(resp, 8);
             var b = new Float32Array(a.length);
+            //console.log("pd", mm[0],mm[1], a.reduce((a,b)=>a+b)/a.length)
             for (var x = 0; x < a.length; x++) {
-                b[x] = (a[x] / 256.0 + mm[0]) * (mm[1] - mm[0]);
+                b[x] = (a[x] / 255.0) * (mm[1] - mm[0]) + mm[0];
             }
             resolve(b);
         }
         xhr.onerror = reject
-        xhr.open("GET", "/VMRI/pd.bin.gz", true)
+        xhr.open("GET", path+"/pd.bin.gz", true)
         xhr.responseType = "arraybuffer";
         xhr.send()
     });
@@ -35,13 +36,14 @@ async function loadDataSet() {
             var mm = new Float32Array(resp, 0, 2);
             var a = new Uint8Array(resp, 8);
             var b = new Float32Array(a.length);
+            //console.log("t1", mm[0],mm[1], a.reduce((a,b)=>a+b)/a.length)
             for (var x = 0; x < a.length; x++) {
-                b[x] = (a[x] / 256.0 + mm[0]) * (mm[1] - mm[0]);
+                b[x] = (a[x] / 255.0) * (mm[1] - mm[0]) + mm[0];
             }
             resolve(b);
         }
         xhr.onerror = reject
-        xhr.open("GET", "/VMRI/t1.bin.gz", true)
+        xhr.open("GET", path+"/t1.bin.gz", true)
         xhr.responseType = "arraybuffer";
         xhr.send()
     });
@@ -52,13 +54,14 @@ async function loadDataSet() {
             var mm = new Float32Array(resp, 0, 2);
             var a = new Uint8Array(resp, 8);
             var b = new Float32Array(a.length);
+            //console.log("t2", mm[0],mm[1], a.reduce((a,b)=>a+b)/a.length)
             for (var x = 0; x < a.length; x++) {
-                b[x] = (a[x] / 256.0 + mm[0]) * (mm[1] - mm[0]);
+                b[x] = (a[x] / 255.0) * (mm[1] - mm[0]) + mm[0];
             }
             resolve(b);
         }
         xhr.onerror = reject
-        xhr.open("GET", "/VMRI/t2.bin.gz", true)
+        xhr.open("GET", path+"/t2.bin.gz", true)
         xhr.responseType = "arraybuffer";
         xhr.send()
     });
@@ -250,9 +253,9 @@ var queryableFunctions = {
     filterKSpace: function (xlines, ylines, fmin, fmax) {
         reply('result', inverseKSpace(k_data_im_re, xlines, ylines, fmin, fmax, true));
     },
-    loadData: async function () {
-        reply('loadData', await loadDataSet());
-    }
+    loadData: async function (path) {
+        reply('loadData', await loadDataSet(path));
+    },
 };
 
 // system functions

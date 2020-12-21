@@ -320,6 +320,10 @@ function displayAndWindow3DImage() {
 function loadFuzzyDataSet() {
     content = document.getElementById("content");
     content.classList.add("hidden");
+    r = document.getElementById("result");
+    r.classList.add("hidden");
+
+    path = document.getElementById("datasetPath").value;
     return new Promise(async (resolve, reject) => {
 
         slice = document.getElementById("slice");
@@ -329,7 +333,7 @@ function loadFuzzyDataSet() {
         spin = document.getElementById("datasetLoading");
         spin.classList.remove("hidden");
 
-        w.sendQuery("loadData");
+        w.sendQuery("loadData", path);
         resolve();
     });
 }
