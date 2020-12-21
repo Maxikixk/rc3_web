@@ -63,6 +63,7 @@ const loadDataMessageHandler = function (data) {
     spin = document.getElementById("datasetLoading");
     spin.classList.add("hidden");
     displayDataSet();
+    setInversionRecovery();
 };
 w.addListener('loadData', loadDataMessageHandler);
 
@@ -256,11 +257,17 @@ function displayAndWindow3DImage() {
     slice = parseInt(in_slice.value);
 
     image_result = new Uint8ClampedArray(xdim * ydim * 4);
-    var ww = parseFloat(in_ww.value) * 0.5
-    var wc = parseFloat(in_wc.value)
+
+    var max = imgResult[0];
+    for (var x = 0; x < imgResult.length; x++) {
+        if(imgResult[x] > max) max = imgResult[x];
+    }
+
+    var ww = max*parseFloat(in_ww.value)/4096 * 0.5
+    var wc = max*parseFloat(in_wc.value)/4096
 
     for (var x = 0; x < xdim * ydim; x++) {
-        val = imgResult[x + slice * xdim * ydim] * 4096
+        val = imgResult[x + slice * xdim * ydim]
         if (val <= (wc - ww)) {
             val = 0
         } else if (val >= (wc + ww)) {
@@ -338,15 +345,32 @@ function loadFuzzyDataSet() {
     });
 }
 
+function setTabs(tabId, tabHeadId) {
+    elems = document.getElementById("sequence").getElementsByClassName("nav-link")
+    for(var x=0;x<elems.length;x++) { 
+        if(elems[x].id == tabHeadId) {
+            elems[x].classList.add("active");
+        } else {
+            elems[x].classList.remove("active");
+        }
+    }
+    elems = document.getElementById("sequence").getElementsByClassName("tab-pane")
+    for(var x=0;x<elems.length;x++) { 
+        if(elems[x].id == tabId) {
+            elems[x].classList.add("active", "show");
+        }
+        else {
+            elems[x].classList.remove("active", "show");
+        }
+    }
+}
+
+var selectedSequence = inversionRecovery;
+
 function setSpinEcho() {
-    var seTab = document.getElementById("params-se");
-    var irTab = document.getElementById("params-ir");
-    var seTabHead = document.getElementById("params-se-tab");
-    var irTabHead = document.getElementById("params-ir-tab");
-    irTab.classList.remove("active", "show");
-    seTab.classList.add("active", "show");
-    irTabHead.classList.remove("active");
-    seTabHead.classList.add("active");
+    setTabs("params-se", "params-se-tab");
+    updateSETime();
+    selectedSequence = spinEcho;
 }
 
 function spinEcho() {
@@ -364,14 +388,9 @@ function spinEcho() {
 }
 
 function setInversionRecovery() {
-    var seTab = document.getElementById("params-se");
-    var irTab = document.getElementById("params-ir");
-    var seTabHead = document.getElementById("params-se-tab");
-    var irTabHead = document.getElementById("params-ir-tab");
-    seTab.classList.remove("active", "show");
-    irTab.classList.add("active", "show");
-    seTabHead.classList.remove("active");
-    irTabHead.classList.add("active");
+    setTabs("params-ir", "params-ir-tab");
+    updateIRTime();
+    selectedSequence = inversionRecovery;
 }
 
 function inversionRecovery() {
@@ -384,8 +403,51 @@ function inversionRecovery() {
 
     var ti = parseFloat(document.getElementById("ir_ti").value)
     var tr = parseFloat(document.getElementById("ir_tr").value)
+    var te = parseFloat(document.getElementById("ir_te").value)
 
-    w.sendQuery("inversionRecovery", ti, tr);
+    w.sendQuery("inversionRecovery", te, tr, ti);
+}
+
+function setSpoiledGradientEcho() {
+    setTabs("params-sge", "params-sge-tab");
+    updateSGETime();
+    selectedSequence = spoiledGradientEcho;
+}
+
+function spoiledGradientEcho() {
+    r = document.getElementById("result");
+    spin = document.getElementById("scanningSpinner");
+    slice = document.getElementById("r_slice");
+    slice.max = zdim;
+    r.classList.add("hidden");
+    spin.classList.remove("hidden");
+
+    var te = parseFloat(document.getElementById("sge_te").value)
+    var tr = parseFloat(document.getElementById("sge_tr").value)
+    var fa = parseFloat(document.getElementById("sge_fa").value)
+
+    w.sendQuery("spoiledGradientEcho", te, tr, fa);
+}
+
+function setFlash() {
+    setTabs("params-flash", "params-flash-tab");
+    updateFlashTime();
+    selectedSequence = flash;
+}
+
+function flash() {
+    r = document.getElementById("result");
+    spin = document.getElementById("scanningSpinner");
+    slice = document.getElementById("r_slice");
+    slice.max = zdim;
+    r.classList.add("hidden");
+    spin.classList.remove("hidden");
+
+    var te = parseFloat(document.getElementById("flash_te").value)
+    var tr = parseFloat(document.getElementById("flash_tr").value)
+    var fa = parseFloat(document.getElementById("flash_fa").value)
+
+    w.sendQuery("flash", te, tr, fa);
 }
 
 function reco(update_slider, noIfft = false) {
@@ -414,18 +476,81 @@ function reco(update_slider, noIfft = false) {
 }
 
 function startScan() {
-    var seTab = document.getElementById("params-se-tab").classList.contains("active");
-    var irTab = document.getElementById("params-ir-tab").classList.contains("active");
-    if (seTab) {
-        spinEcho();
-    }
-    if (irTab) {
-        inversionRecovery();
-    }
+    selectedSequence();
 }
 
 function displayDataSet() {
     display3DImage(document.getElementById("imgPD"), array_pd);
     display3DImage(document.getElementById("imgT1"), array_t1);
     display3DImage(document.getElementById("imgT2"), array_t2);
+}
+
+function updateIRTime() {
+    var ti = parseFloat(document.getElementById("ir_ti").value)
+    var te = parseFloat(document.getElementById("ir_te").value)
+    var tr = parseFloat(document.getElementById("ir_tr").value)
+    var time = document.getElementById("ir_time");
+
+    if(ti+te >= tr) {
+        time.innerText = "TE+TI has to be smaller than TR";
+    } else {
+        time.innerText = formatTime(tr*256);
+    }
+}
+
+function updateSETime() {
+    var te = parseFloat(document.getElementById("se_te").value)
+    var tr = parseFloat(document.getElementById("se_tr").value)
+    var time = document.getElementById("se_time");
+    
+    if(te >= tr) {
+        time.innerText = "TE has to be smaller than TR";
+    } else {
+        time.innerText = formatTime(tr*256);
+    }
+}
+
+function updateSGETime() {
+    var te = parseFloat(document.getElementById("sge_te").value)
+    var tr = parseFloat(document.getElementById("sge_tr").value)
+    var fa = parseFloat(document.getElementById("sge_fa").value)
+    var time = document.getElementById("sge_time");
+    
+    if(fa>180) { document.getElementById("sge_fa").value = 180; }
+    if(fa<-180) { document.getElementById("sge_fa").value = -180; }
+
+    if(te >= tr) {
+        time.innerText = "TE has to be smaller than TR";
+    } else {
+        time.innerText = formatTime(tr*256);
+    }
+}
+
+function updateFlashTime() {
+    var te = parseFloat(document.getElementById("flash_te").value)
+    var tr = parseFloat(document.getElementById("flash_tr").value)
+    var fa = parseFloat(document.getElementById("flash_fa").value)
+    var time = document.getElementById("flash_time");
+        
+    if(fa>180) { document.getElementById("flash_fa").value = 180; }
+    if(fa<-180) { document.getElementById("flash_fa").value = -180; }
+
+    if(te >= tr) {
+        time.innerText = "TE has to be smaller than TR";
+    } else {
+        time.innerText = formatTime(tr*256);
+    }
+}
+
+function formatTime(time) {
+    d = new Date(time);
+    timeString = "";
+    if(d.getFullYear() > 1970) {
+        timeString += (d.getFullYear()-1970) + " years ";
+    }
+    if(d.getDate() > 1) {
+        timeString += (d.getDate()-1) + " days ";
+    }
+    timeString += (d.getHours()<11?"0":"") + (d.getHours()-1) + ":" + (d.getMinutes()<10?"0":"") + d.getMinutes() + ":" + (d.getSeconds()<10?"0":"") + d.getSeconds();
+    return timeString;
 }

@@ -7,8 +7,8 @@
     <link rel="shortcut icon" href="/res/img/favicon.ico">
     <title>Virtual MRI</title>
     <script src="/res/js/vmri.js"></script>
-    <link href="/res/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/res/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/res/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/res/css/font-awesome.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/res/css/base.css" />
     <link rel="stylesheet" href="/res/css/vmri.css" />
 </head>
@@ -67,6 +67,8 @@
                             <div class="nav-link active" id="params-ir-tab" onclick="setInversionRecovery()">Inversion
                                 Recovery</div>
                             <div class="nav-link" id="params-se-tab" onclick="setSpinEcho()">Spin Echo</div>
+                            <div class="nav-link" id="params-sge-tab" onclick="setSpoiledGradientEcho()">Spoiled Gradient Echo</div>
+                            <div class="nav-link" id="params-flash-tab" onclick="setFlash()">Flash</div>
                         </div>
                     </div>
                     <div class="row border py-2 tab-content" id="params">
@@ -75,13 +77,25 @@
                                 <div class="col-auto w-25">
                                     <label class="mb-0 align-self-center">TI:</label>
                                 </div>
-                                <input class="col-sm form-control" type="number" value="400" name="ti" id="ir_ti" />
+                                <input class="col-sm form-control" type="number" value="420" name="ti" id="ir_ti" oninput="updateIRTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TE:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="23" name="tr" id="ir_te" oninput="updateIRTime()"/>
                             </div>
                             <div class="form-row">
                                 <div class="col-auto w-25">
                                     <label class="mb-0 align-self-center">TR:</label>
                                 </div>
-                                <input class="col-sm form-control" type="number" value="6000" name="tr" id="ir_tr" />
+                                <input class="col-sm form-control" type="number" value="666" name="tr" id="ir_tr" oninput="updateIRTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">Total Measuring Time:</label>
+                                </div>
+                                <p class="col-sm form-control mb-0" id="ir_time"></p>
                             </div>
                         </div>
                         <div class="col tab-pane" id="params-se">
@@ -89,13 +103,71 @@
                                 <div class="col-auto w-25">
                                     <label class="mb-0 align-self-center">TE:</label>
                                 </div>
-                                <input class="col-sm form-control" type="number" value="400" name="ti" id="se_te" />
+                                <input class="col-sm form-control" type="number" value="420" name="ti" id="se_te" oninput="updateSETime()"/>
                             </div>
                             <div class="form-row">
                                 <div class="col-auto w-25">
                                     <label class="mb-0 align-self-center">TR:</label>
                                 </div>
-                                <input class="col-sm form-control" type="number" value="6000" name="tr" id="se_tr" />
+                                <input class="col-sm form-control" type="number" value="666" name="tr" id="se_tr" oninput="updateSETime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">Total Measuring Time:</label>
+                                </div>
+                                <p class="col-sm form-control mb-0" id="se_time"></p>
+                            </div>
+                        </div>
+                        <div class="col tab-pane" id="params-sge">
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TE:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="42" name="ti" id="sge_te" oninput="updateSGETime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TR:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="666" name="tr" id="sge_tr" oninput="updateSGETime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">FA:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="23" min="-180" max="180" name="fa" id="sge_fa" oninput="updateSGETime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">Total Measuring Time:</label>
+                                </div>
+                                <p class="col-sm form-control mb-0" id="sge_time"></p>
+                            </div>
+                        </div>
+                        <div class="col tab-pane" id="params-flash">
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TE:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="42" name="ti" id="flash_te" oninput="updateFlashTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TR:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="666" name="tr" id="flash_tr" oninput="updateFlashTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">FA:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="23" min="-180" max="180" name="fa" id="flash_fa" oninput="updateFlashTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">Total Measuring Time:</label>
+                                </div>
+                                <p class="col-sm form-control mb-0" id="flash_time"></p>
                             </div>
                         </div>
                     </div>
