@@ -22,7 +22,7 @@
       src: url('font/Minecraftia-Regular.ttf');
     }
     
-    h1 {font-family: Minecraftia};
+    *, h1 {font-family: Minecraftia};
   </style>
 
   <script>
@@ -52,7 +52,7 @@
 </head>
 <body>
   <!-- Please don't judge this thing too hard - It's a 'Learning-By-Doing'-Project... -->
-  <h1>C [er] T</h1>
+  <h1>C (er) T</h1>
 
   <div style="display: none"; id="scan">
     <canvas id="canvas" width="128" height="128"></canvas>
@@ -108,9 +108,9 @@
       ctx.beginPath();
       ctx.fillStyle = 'white';
       ctx.strokeStyle = 'white';
-      <!-- ctx.rect(20,1270,500,40); -->
+      //ctx.rect(20,1270,500,40);
       ctx.stroke();
-      <!-- ctx.putImageData(imageData, 20, 20); -->
+      //ctx.putImageData(imageData, 20, 20);
       idname=document.getElementById("idname").value;
       ctx.textAlign = 'right';
       ctx.fillText(idname, 128, 10);
