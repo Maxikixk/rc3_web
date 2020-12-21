@@ -258,16 +258,11 @@ function displayAndWindow3DImage() {
 
     image_result = new Uint8ClampedArray(xdim * ydim * 4);
 
-    var max = imgResult[0];
-    for (var x = 0; x < imgResult.length; x++) {
-        if(imgResult[x] > max) max = imgResult[x];
-    }
-
-    var ww = max*parseFloat(in_ww.value)/4096 * 0.5
-    var wc = max*parseFloat(in_wc.value)/4096
+    var ww = parseFloat(in_ww.value) * 0.5
+    var wc = parseFloat(in_wc.value)
 
     for (var x = 0; x < xdim * ydim; x++) {
-        val = imgResult[x + slice * xdim * ydim]
+        val = imgResult[x + slice * xdim * ydim]*4096
         if (val <= (wc - ww)) {
             val = 0
         } else if (val >= (wc + ww)) {
@@ -450,6 +445,69 @@ function flash() {
     w.sendQuery("flash", te, tr, fa);
 }
 
+function setBalancedSSFP() {
+    setTabs("params-bssfp", "params-bssfp-tab");
+    updateBalancedSSFPTime();
+    selectedSequence = balancedSSFP;
+}
+
+function balancedSSFP() {
+    r = document.getElementById("result");
+    spin = document.getElementById("scanningSpinner");
+    slice = document.getElementById("r_slice");
+    slice.max = zdim;
+    r.classList.add("hidden");
+    spin.classList.remove("hidden");
+
+    var te = parseFloat(document.getElementById("fisp_te").value)
+    var fa = parseFloat(document.getElementById("fisp_fa").value)
+    var tr = te*2;
+
+    w.sendQuery("fisp", te, tr, fa);
+}
+
+function setFISP() {
+    setTabs("params-fisp", "params-fisp-tab");
+    updateFISPTime();
+    selectedSequence = FISP;
+}
+
+function FISP() {
+    r = document.getElementById("result");
+    spin = document.getElementById("scanningSpinner");
+    slice = document.getElementById("r_slice");
+    slice.max = zdim;
+    r.classList.add("hidden");
+    spin.classList.remove("hidden");
+
+    var te = parseFloat(document.getElementById("fisp_te").value)
+    var fa = parseFloat(document.getElementById("fisp_fa").value)
+    var tr = te*2;
+
+    w.sendQuery("fisp", te, tr, fa);
+}
+
+function setPSIF() {
+    setTabs("params-psif", "params-psif-tab");
+    updatePSIFTime();
+    selectedSequence = PSIF;
+}
+
+function PSIF() {
+    r = document.getElementById("result");
+    spin = document.getElementById("scanningSpinner");
+    slice = document.getElementById("r_slice");
+    slice.max = zdim;
+    r.classList.add("hidden");
+    spin.classList.remove("hidden");
+
+    var te = parseFloat(document.getElementById("psif_te").value)
+    var fa = parseFloat(document.getElementById("psif_fa").value)
+    var tr = te*2;
+
+    w.sendQuery("psif", te, tr, fa);
+}
+
 function reco(update_slider, noIfft = false) {
     document.getElementById("kspace").setAttribute("disabled","disabled");
     var xlines, ylines, fmin, fmax;
@@ -494,7 +552,7 @@ function updateIRTime() {
     if(ti+te >= tr) {
         time.innerText = "TE+TI has to be smaller than TR";
     } else {
-        time.innerText = formatTime(tr*256);
+        time.innerText = formatTime(tr*256*256);
     }
 }
 
@@ -506,23 +564,23 @@ function updateSETime() {
     if(te >= tr) {
         time.innerText = "TE has to be smaller than TR";
     } else {
-        time.innerText = formatTime(tr*256);
+        time.innerText = formatTime(tr*256*256);
     }
 }
 
-function updateSGETime() {
-    var te = parseFloat(document.getElementById("sge_te").value)
-    var tr = parseFloat(document.getElementById("sge_tr").value)
-    var fa = parseFloat(document.getElementById("sge_fa").value)
-    var time = document.getElementById("sge_time");
+function updatePSIFTime() {
+    var te = parseFloat(document.getElementById("psif_te").value)
+    var tr = parseFloat(document.getElementById("psif_tr").value)
+    var fa = parseFloat(document.getElementById("psif_fa").value)
+    var time = document.getElementById("psif_time");
     
-    if(fa>180) { document.getElementById("sge_fa").value = 180; }
-    if(fa<-180) { document.getElementById("sge_fa").value = -180; }
+    if(fa>180) { document.getElementById("psif_fa").value = 180; }
+    if(fa<-180) { document.getElementById("psif_fa").value = -180; }
 
     if(te >= tr) {
         time.innerText = "TE has to be smaller than TR";
     } else {
-        time.innerText = formatTime(tr*256);
+        time.innerText = formatTime(tr*256*256);
     }
 }
 
@@ -538,8 +596,37 @@ function updateFlashTime() {
     if(te >= tr) {
         time.innerText = "TE has to be smaller than TR";
     } else {
-        time.innerText = formatTime(tr*256);
+        time.innerText = formatTime(tr*256*256);
     }
+}
+
+function updateFISPTime() {
+    var te = parseFloat(document.getElementById("fisp_te").value)
+    var tr = parseFloat(document.getElementById("fisp_tr").value)
+    var fa = parseFloat(document.getElementById("fisp_fa").value)
+    var time = document.getElementById("fisp_time");
+        
+    if(fa>180) { document.getElementById("fisp_fa").value = 180; }
+    if(fa<-180) { document.getElementById("fisp_fa").value = -180; }
+
+    if(te >= tr) {
+        time.innerText = "TE has to be smaller than TR";
+    } else {
+        time.innerText = formatTime(te*2*256*256);
+    }
+}
+
+function updateBalancedSSFPTime() {
+    var te = parseFloat(document.getElementById("bssfp_te").value)
+    var fa = parseFloat(document.getElementById("bssfp_fa").value)
+    var time = document.getElementById("bssfp_time");
+        
+    if(fa>180) { document.getElementById("bssfp_fa").value = 180; }
+    if(fa<-180) { document.getElementById("bssfp_fa").value = -180; }
+
+    document.getElementById("bssfp_tr").value = te*2;
+
+    time.innerText = formatTime(te*2*256*256);
 }
 
 function formatTime(time) {

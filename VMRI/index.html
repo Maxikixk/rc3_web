@@ -67,7 +67,9 @@
                             <div class="nav-link active" id="params-ir-tab" onclick="setInversionRecovery()">Inversion
                                 Recovery</div>
                             <div class="nav-link" id="params-se-tab" onclick="setSpinEcho()">Spin Echo</div>
-                            <div class="nav-link" id="params-sge-tab" onclick="setSpoiledGradientEcho()">Spoiled Gradient Echo</div>
+                            <div class="nav-link" id="params-bssfp-tab" onclick="setBalancedSSFP()">Balanced SSFP</div>
+                            <div class="nav-link" id="params-fisp-tab" onclick="setFISP()">FISP</div>
+                            <div class="nav-link" id="params-psif-tab" onclick="setPSIF()">PSIF</div>
                             <div class="nav-link" id="params-flash-tab" onclick="setFlash()">Flash</div>
                         </div>
                     </div>
@@ -118,30 +120,82 @@
                                 <p class="col-sm form-control mb-0" id="se_time"></p>
                             </div>
                         </div>
-                        <div class="col tab-pane" id="params-sge">
+                        <div class="col tab-pane" id="params-bssfp">
                             <div class="form-row">
                                 <div class="col-auto w-25">
                                     <label class="mb-0 align-self-center">TE:</label>
                                 </div>
-                                <input class="col-sm form-control" type="number" value="42" name="ti" id="sge_te" oninput="updateSGETime()"/>
+                                <input class="col-sm form-control" type="number" value="42" name="ti" id="bssfp_te" oninput="updateBalancedSSFPTime()"/>
                             </div>
                             <div class="form-row">
                                 <div class="col-auto w-25">
                                     <label class="mb-0 align-self-center">TR:</label>
                                 </div>
-                                <input class="col-sm form-control" type="number" value="666" name="tr" id="sge_tr" oninput="updateSGETime()"/>
+                                <input class="col-sm form-control" type="number" value="84" name="tr" id="bssfp_tr" disabled/>
                             </div>
                             <div class="form-row">
                                 <div class="col-auto w-25">
                                     <label class="mb-0 align-self-center">FA:</label>
                                 </div>
-                                <input class="col-sm form-control" type="number" value="23" min="-180" max="180" name="fa" id="sge_fa" oninput="updateSGETime()"/>
+                                <input class="col-sm form-control" type="number" value="23" min="-180" max="180" name="fa" id="bssfp_fa" oninput="updateBalancedSSFPTime()"/>
                             </div>
                             <div class="form-row">
                                 <div class="col-auto w-25">
                                     <label class="mb-0 align-self-center">Total Measuring Time:</label>
                                 </div>
-                                <p class="col-sm form-control mb-0" id="sge_time"></p>
+                                <p class="col-sm form-control mb-0" id="bssfp_time"></p>
+                            </div>
+                        </div>
+                        <div class="col tab-pane" id="params-fisp">
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TE:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="42" name="ti" id="fisp_te" oninput="updateFISPTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TR:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="84" name="tr" id="fisp_tr" oninput="updateFISPTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">FA:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="23" min="-180" max="180" name="fa" id="fisp_fa" oninput="updateFISPTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">Total Measuring Time:</label>
+                                </div>
+                                <p class="col-sm form-control mb-0" id="fisp_time"></p>
+                            </div>
+                        </div>
+                        <div class="col tab-pane" id="params-psif">
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TE:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="42" name="ti" id="psif_te" oninput="updatePSIFTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">TR:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="84" name="tr" id="psif_tr" oninput="updatePSIFTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">FA:</label>
+                                </div>
+                                <input class="col-sm form-control" type="number" value="23" min="-180" max="180" name="fa" id="psif_fa" oninput="updatePSIFTime()"/>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-auto w-25">
+                                    <label class="mb-0 align-self-center">Total Measuring Time:</label>
+                                </div>
+                                <p class="col-sm form-control mb-0" id="psif_time"></p>
                             </div>
                         </div>
                         <div class="col tab-pane" id="params-flash">
