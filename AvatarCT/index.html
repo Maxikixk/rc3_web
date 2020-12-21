@@ -29,6 +29,23 @@
     $(document).ready(function(){
       idfield = document.getElementById("idname");
       idfield.focus();
+
+      xmode = false;
+      if (document.location.href.includes("XRay")) xmode = true;
+        console.log(xmode);
+
+      if (xmode) {
+        document.getElementById("xmode").style="display: inline-block";
+      }
+
+      if (!xmode) {
+        image.src = "x-ray-base.png";
+      } else {
+        src = document.getElementById("src").value;
+        image.src = src + ".png"
+      }
+    console.log("src: "+image.src);
+    imageValid = false;
     })
   </script>
 
@@ -52,6 +69,9 @@
     let idname = "ASixteenByteName"
 
     image.addEventListener ( "load", function (){
+      imageValid = true;
+      console.log("csrc: "+image.src);
+
       ctx.drawImage (image, 0, 0);
       //imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       imageData = ctx.getImageData(20, 1270, 500, 40)
@@ -76,10 +96,13 @@
       */
     });
 
-    image.src = "x-ray-base.png";
-
     function doScan(e) {
       e.preventDefault();
+
+      if (!imageValid) {
+        alert("Oops: Scanner empty, please try again...\n\nOops: Scanner leer, bitte erneut versuchen...");
+        return false;
+      }
 
       console.log("Current name: ");
       ctx.beginPath();
@@ -116,6 +139,14 @@
       return false;
     }
 
+    function partChanged() {
+      console.log("body part change...");
+      src = document.getElementById("src").value;
+      image.src = src+".png";
+      imageValid = false;
+      console.log("nsrc: "+image.src);
+    }
+
     </script>
 
     <div style="display: inline-block;" id="form">
@@ -127,6 +158,18 @@
         <div>
           <label title="aka Birthday">Release date:</label>
           <input title="aka Birthday" id="iddate" name="iddate" placeholder="e.g. MM/DD/YYYY" type="text"/>
+        </div>
+        <div id="xmode" style="display: none;" onchange="partChanged();">
+          <label>Body part</label>
+          <select id="src" name="xbase">
+            <option value="armlinks">Left arm/Linker Arm</option>
+            <option value="armrechts">Right arm/Rechter Arm</option>
+            <option value="beinlinks">left leg/Linkes Bein</option>
+            <option value="beinrechts">Right leg/Rechtes Bein</option>
+            <option value="huefte">Hip/Hüfte</option>
+            <option value="schaedel">Head/Schädel</option>
+            <option selected value="thorax">Thorax</option>
+          </select>
         </div>
         <div>
           <input type="submit" value="Start scan"/>
