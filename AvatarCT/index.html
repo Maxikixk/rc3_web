@@ -22,7 +22,58 @@
       src: url('font/Minecraftia-Regular.ttf');
     }
     
-    *, h1 {font-family: Minecraftia};
+    *, h1 {font-family: Minecraftia}
+
+    .wrapper {
+      position: relative;
+      background-color: inherit;
+    }
+
+    .underlay {
+      position: relative;
+    }
+
+    .ctoverlay {        
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: inherit;
+        opacity: 1;
+        z-index: 2;
+        animation-name: scanner;
+        animation-duration: 2s;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+        animation-play-state: paused;
+    }
+    .xrayoverlay {
+      position: absolute;
+        bottom: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: inherit;
+        opacity: 1;
+        z-index: 2;
+        animation-name: flasher;
+        animation-duration: 2s;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+        animation-play-state: paused;
+    }
+
+    @keyframes scanner {
+      from {height: 100%}
+      to {height: 0}
+    }
+    @keyframes flasher {
+      0% {opacity: 1;
+          background-color: black;}
+      10% {opacity: 1;
+            background-color: white;}
+      100% {opacity: 0;
+            background-color: black;}
+    }
   </style>
 
   <script>
@@ -36,6 +87,13 @@
 
       if (xmode) {
         document.getElementById("xmode").style="display: inline-block";
+        document.getElementById("ct_anim").style="display: none";
+        document.getElementById("xray_anim").style="display: block";
+        anim_elem = document.getElementById("xray_anim");
+      } else {
+        document.getElementById("ct_anim").style="display: block";
+        document.getElementById("xray_anim").style="display: none";
+        anim_elem = document.getElementById("ct_anim");
       }
 
       if (!xmode) {
@@ -51,11 +109,14 @@
 
 </head>
 <body>
+
   <!-- Please don't judge this thing too hard - It's a 'Learning-By-Doing'-Project... -->
   <h1>C [er] T</h1>
 
-  <div style="display: none;" id="scan">
-    <canvas id="canvas" width="128" height="128"></canvas>
+  <div class="wrapper" style="display: none;" id="scan">
+    <canvas class="underlay" id="canvas" width="128" height="128"></canvas>
+    <div class="ctoverlay" style="display: none;" id="ct_anim"></div>
+    <div class="xrayoverlay" style="display: none;" id="xray_anim"></div>
   </div>
   
   <script>
@@ -96,6 +157,20 @@
       */
     });
 
+    function anim_done(e) {
+      console.log("Event: animation done");
+      // Hide xray-overlay to allow saving of the image
+      document.getElementById("xray_anim").style="display: none";
+    }
+
+    function failsave() {
+      // Failsave to remove xray-overlay if the event is not supported
+      console.log("FailSave triggered");
+      document.getElementById("xray_anim").style="display: none";
+      // Just in case, also the ct-overlay if the animation is not supported
+      document.getElementById("ct_anim").style="display: none";
+    }
+
     function doScan(e) {
       e.preventDefault();
 
@@ -133,8 +208,17 @@
       currtime=hour+":"+min+":"+sec;
       ctx.fillText(currtime, 0, 128);
 
-      document.getElementById("scan").style="display: block";
+      document.getElementById("scan").style="display: inline-block";
       document.getElementById("form").style="display: none";
+      setTimeout(failsave, 3000); // animation_duration + 1 sec
+      if (!xmode) {
+        document.querySelector('.ctoverlay').style.animationPlayState = "running";
+
+      } else {
+        document.querySelector('.xrayoverlay').style.animationPlayState = "running";
+        anim_elem.addEventListener("animationend", anim_done);
+        setTimeout(failsave, 3000); // animation_duration + 1 sec
+      }
 
       return false;
     }
@@ -149,7 +233,7 @@
 
     </script>
 
-    <div style="display: inline-block;" id="form">
+    <div style="display: block;" id="form">
       <form onsubmit="doScan(event)">
         <div>
           <label>Your name:</label>
